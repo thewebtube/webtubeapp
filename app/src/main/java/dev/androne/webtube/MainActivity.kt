@@ -7,8 +7,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
-import android.view.KeyEvent
-import android.view.Window
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -18,20 +16,25 @@ import java.io.InputStream
 import java.lang.Exception
 import java.net.URLEncoder
 import android.app.Activity;
+import android.app.PictureInPictureParams
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Bitmap;
-import android.view.LayoutInflater;
-import android.view.View;
+import android.view.*
 import android.webkit.WebChromeClient.CustomViewCallback
 import android.widget.FrameLayout;
 import android.webkit.WebResourceRequest
 
 import android.webkit.WebResourceResponse
 import android.webkit.ValueCallback
-import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.webkit.JavascriptInterface
+import androidx.annotation.RequiresApi
 import dev.androne.webtube.JSController
+import android.view.WindowManager
+
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     private var mCustomView: View? = null
     private var mWebChromeClient: myWebChromeClient? = null
     private var mWebViewClient: myWebViewClient? = null
-    private val allowed = arrayOf("youtube.com", "google.com")
+    private val allowed = arrayOf("youtube.com", "google.ae","google.am","google.as","google.at","google.az","google.ba","google.be","google.bg","google.bi","google.bs","google.ca","google.cd","google.cg","google.ch","google.ci","google.cl","google.co.bw","google.co.ck","google.co.cr","google.co.hu","google.co.id","google.co.il","google.co.im","google.co.in","google.co.je","google.co.jp","google.co.ke","google.co.kr","google.co.ls","google.co.ma","google.co.nz","google.co.th","google.co.ug","google.co.uk","google.co.uz","google.co.ve","google.co.vi","google.co.za","google.co.zm","google.com","google.com.af","google.com.ag","google.com.ar","google.com.au","google.com.bd","google.com.bo","google.com.br","google.com.bz","google.com.co","google.com.cu","google.com.do","google.com.ec","google.com.eg","google.com.et","google.com.fj","google.com.gi","google.com.gt","google.com.hk","google.com.jm","google.com.kw","google.com.ly","google.com.mt","google.com.mx","google.com.my","google.com.na","google.com.nf","google.com.ni","google.com.np","google.com.om","google.com.pa","google.com.pe","google.com.ph","google.com.pk","google.com.pr","google.com.py","google.com.qa","google.com.sa","google.com.sb","google.com.sg","google.com.sv","google.com.tj","google.com.tr","google.com.tw","google.com.ua","google.com.uy","google.com.uz","google.com.vc","google.com.vn","google.cz","google.de","google.dj","google.dk","google.dm","google.ee","google.es","google.fi","google.fm","google.fr","google.gg","google.gl","google.gm","google.gr","google.hn","google.hr","google.ht","google.hu","google.ie","google.is","google.it","google.jo","google.kg","google.kz","google.li","google.lk","google.lt","google.lu","google.lv","google.md","google.mn","google.ms","google.mu","google.mw","google.net","google.nl","google.no","google.nr","google.nu","google.off.ai","google.org","google.pl","google.pn","google.pt","google.ro","google.ru","google.rw","google.sc","google.se","google.sh","google.si","google.sk","google.sm","google.sn","google.tm","google.to","google.tp","google.tt","google.tv","google.uz","google.vg","google.vu","google.ws")
     private var urlFinished = "";
     private var jsc: JSController? = null;
 
@@ -78,15 +81,15 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause() //To change body of overridden methods use File | Settings | File Templates.
         if (!isVideoView()) {
-            webView!!.onPause()
+            webView!!.onPause() // don't send to youtube (to play in backgroud)
         }
     }
 
     override fun onResume() {
+        super.onResume() //To change body of overridden methods use File | Settings | File Templates
         if (!isVideoView()) {
-            super.onResume() //To change body of overridden methods use File | Settings | File Templates.
+            webView!!.onResume()
         }
-        //webView!!.onResume()
     }
 
     override fun onStop() {
@@ -98,10 +101,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onUserLeaveHint() {
         if (isVideoView()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                enterPictureInPictureMode()
-                jsc?.exec("toggleFull")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                setPictureInPictureParams(
+                    PictureInPictureParams.Builder()
+                        .setAutoEnterEnabled(true)
+                        .build()
+                )
+            }else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    enterPictureInPictureMode()
+                }
             }
+        }
+    }
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration
+    ) {
+        if (isInPictureInPictureMode) {
+            // Hide the full-screen UI (controls, etc.) while in picture-in-picture mode.
+            jsc?.exec("enterFullScreen")
+
+        } else {
+            jsc?.exec("exitFullScreen")
         }
     }
 
@@ -145,6 +168,7 @@ class MainActivity : AppCompatActivity() {
             customViewContainer!!.visibility = View.VISIBLE
             customViewContainer!!.addView(view)
             customViewCallback = callback
+            hideSystemUI()
         }
 
         override fun getVideoLoadingProgressView(): View? {
@@ -168,6 +192,7 @@ class MainActivity : AppCompatActivity() {
             customViewContainer!!.removeView(mCustomView)
             customViewCallback!!.onCustomViewHidden()
             mCustomView = null
+            showSystemUI()
         }
     }
 
@@ -210,5 +235,22 @@ class MainActivity : AppCompatActivity() {
         return webView?.url.toString().contains("youtube.com/watch?v=")
     }
 
-
+    fun hideSystemUI() {
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
+        }
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+    }
+    fun showSystemUI() {
+        if (supportActionBar != null) {
+            supportActionBar!!.show()
+        }
+        window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+    }
 }

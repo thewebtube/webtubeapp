@@ -68,6 +68,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                     );
                     }
                 """.trimIndent()
+
     private val toggleFull = """
         document.querySelector("#player-control-overlay").click()
         document.querySelector("#player-control-overlay > div > div:nth-child(5) > div > button").click()
@@ -75,6 +76,20 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
         document.querySelector("#player-control-overlay").click()
         },1000)
     """.trimIndent()
+
+
+    private val exitFullScreen = """
+        if(Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
+          document.exitFullscreen()
+        }
+    """.trimIndent()
+
+        private val enterFullScreen = """
+      if(!Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
+         $toggleFull
+        }
+    """.trimIndent()
+
     private fun checkIfPlay() {
         val script = """
             function () {
@@ -97,13 +112,17 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
             script = togglePlay
         } else if (action == "init") {
             script = initScript
-        }else if (action == "toggleFull"){
+        } else if (action == "toggleFull") {
             script = toggleFull
+        } else if (action == "exitFullScreen") {
+            script = exitFullScreen
+        } else if (action == "enterFullScreen") {
+            script = enterFullScreen
         }
         try {
             webView.evaluateJavascript(script) { _ -> Log.d("SCRIPT", "Injected") }
-        }catch (e :Error){
-           Log.d("SCRIPT", "Inject Fail")
+        } catch (e: Error) {
+            Log.d("SCRIPT", "Inject Fail")
         }
     }
 
