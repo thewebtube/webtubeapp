@@ -44,14 +44,13 @@ class MainActivity : AppCompatActivity() {
     private var mCustomView: View? = null
     private var mWebChromeClient: myWebChromeClient? = null
     private var mWebViewClient: myWebViewClient? = null
-    private val allowed = arrayOf("youtube.com", "google.ae","google.am","google.as","google.at","google.az","google.ba","google.be","google.bg","google.bi","google.bs","google.ca","google.cd","google.cg","google.ch","google.ci","google.cl","google.co.bw","google.co.ck","google.co.cr","google.co.hu","google.co.id","google.co.il","google.co.im","google.co.in","google.co.je","google.co.jp","google.co.ke","google.co.kr","google.co.ls","google.co.ma","google.co.nz","google.co.th","google.co.ug","google.co.uk","google.co.uz","google.co.ve","google.co.vi","google.co.za","google.co.zm","google.com","google.com.af","google.com.ag","google.com.ar","google.com.au","google.com.bd","google.com.bo","google.com.br","google.com.bz","google.com.co","google.com.cu","google.com.do","google.com.ec","google.com.eg","google.com.et","google.com.fj","google.com.gi","google.com.gt","google.com.hk","google.com.jm","google.com.kw","google.com.ly","google.com.mt","google.com.mx","google.com.my","google.com.na","google.com.nf","google.com.ni","google.com.np","google.com.om","google.com.pa","google.com.pe","google.com.ph","google.com.pk","google.com.pr","google.com.py","google.com.qa","google.com.sa","google.com.sb","google.com.sg","google.com.sv","google.com.tj","google.com.tr","google.com.tw","google.com.ua","google.com.uy","google.com.uz","google.com.vc","google.com.vn","google.cz","google.de","google.dj","google.dk","google.dm","google.ee","google.es","google.fi","google.fm","google.fr","google.gg","google.gl","google.gm","google.gr","google.hn","google.hr","google.ht","google.hu","google.ie","google.is","google.it","google.jo","google.kg","google.kz","google.li","google.lk","google.lt","google.lu","google.lv","google.md","google.mn","google.ms","google.mu","google.mw","google.net","google.nl","google.no","google.nr","google.nu","google.off.ai","google.org","google.pl","google.pn","google.pt","google.ro","google.ru","google.rw","google.sc","google.se","google.sh","google.si","google.sk","google.sm","google.sn","google.tm","google.to","google.tp","google.tt","google.tv","google.uz","google.vg","google.vu","google.ws")
     private var urlFinished = "";
     private var jsc: JSController? = null;
 
     /**
      * Called when the activity is first created.
      */
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility", "SetJavaScriptEnabled")
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -65,8 +64,7 @@ class MainActivity : AppCompatActivity() {
         webView!!.settings.setAppCacheEnabled(true)
         webView!!.settings.builtInZoomControls = true
         webView!!.settings.saveFormData = true
-        webView!!.settings.allowUniversalAccessFromFileURLs = true;
-        webView!!.loadUrl("http://m.youtube.com")
+        webView!!.loadUrl("https://m.youtube.com")
         jsc = JSController(webView!!)
     }
 
@@ -201,11 +199,10 @@ class MainActivity : AppCompatActivity() {
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
             val host = Uri.parse(url).host.toString()
             val path = Uri.parse(url).path.toString()
-            allowed.forEach {
-                if (host.endsWith(it)) {
-                    return false
-                }
+            if (host == "m.youtube.com" || host == "youtube.com" || host == "accounts.youtube.com" || host.contains("google")){ // for google login
+                return false
             }
+
             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
                 startActivity(this) //Here's the problem!
             }
@@ -217,9 +214,9 @@ class MainActivity : AppCompatActivity() {
             if (urlFinished != url) {
                 // do your stuff here
                 val host = Uri.parse(url).host.toString()
-                val path = Uri.parse(url).path.toString()
-                if (host.endsWith("youtube.com") && (path == "/" || path == "")) {
+                if (host == "m.youtube.com") {
                     jsc?.exec("init")
+                    Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
                 }
             }
 
