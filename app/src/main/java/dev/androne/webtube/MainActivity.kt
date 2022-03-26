@@ -66,10 +66,7 @@ open class MainActivity : AppCompatActivity() {
         if (this.data?.host?.endsWith("youtube.com") == true) {
             webView!!.loadUrl(this.data.encodedPath.toString())
         } else {
-            if (savedInstanceState != null)
-                webView!!.restoreState(savedInstanceState)
-            else
-                webView!!.loadUrl("https://m.youtube.com")
+            webView!!.loadUrl("https://m.youtube.com")
 
         }
         jsc = JSController(webView!!)
@@ -98,20 +95,22 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume() //To change body of overridden methods use File | Settings | File Templates
-        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
-        val url = sharedPref.getString("lastURL", null)
-        if (url != null){
 
-            val path = Uri.parse(url).path
-            if (path != null) {
-                if (path.contains("youtube.com/watch?v=")) {
-                    webView?.loadUrl(url)
-                    jsc = JSController(webView!!)
-                }
-            }
-
-        }
         if (!isVideoView()) {
+            val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+            val url = sharedPref.getString("lastURL", null)
+            if (url != null) {
+
+                val path = Uri.parse(url).path
+                if (path != null) {
+                    if (path.contains("watch")) {
+                        webView?.loadUrl(url)
+                        jsc = JSController(webView!!)
+                    }
+                }
+
+
+            }
             webView!!.onResume()
         }
     }
