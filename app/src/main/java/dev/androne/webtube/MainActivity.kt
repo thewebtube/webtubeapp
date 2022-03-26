@@ -103,9 +103,11 @@ open class MainActivity : AppCompatActivity() {
         if (url != null){
 
             val path = Uri.parse(url).path
-            if (path != "/" && path != "") {
-                webView?.loadUrl(url)
-                jsc = JSController(webView!!)
+            if (path != null) {
+                if (path.contains("youtube.com/watch?v=")) {
+                    webView?.loadUrl(url)
+                    jsc = JSController(webView!!)
+                }
             }
 
         }
