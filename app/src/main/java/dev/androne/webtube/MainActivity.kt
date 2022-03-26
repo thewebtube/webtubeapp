@@ -15,6 +15,7 @@ import android.webkit.WebChromeClient.CustomViewCallback
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
@@ -59,8 +60,9 @@ open class MainActivity : AppCompatActivity() {
         webView!!.webChromeClient = mWebChromeClient
         webView!!.settings.javaScriptEnabled = true
         webView!!.settings.setAppCacheEnabled(true)
-        webView!!.settings.builtInZoomControls = true
+        webView!!.settings.builtInZoomControls = false
         webView!!.settings.saveFormData = true
+
 
         if (this.data?.host?.endsWith("youtube.com") == true) {
             webView!!.loadUrl(this.data.encodedPath.toString())
@@ -98,9 +100,11 @@ open class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume() //To change body of overridden methods use File | Settings | File Templates
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
-        val url = sharedPref.getString("lastURL", "https://m.youtube.com")
-        if (url != null) {
+        val url = sharedPref.getString("lastURL", null)
+        val path = Uri.parse(url).path
+        if (url != null && (path != "/" && path != "") ) {
             webView?.loadUrl(url)
+            jsc = JSController(webView!!)
         }
         if (!isVideoView()) {
             webView!!.onResume()
