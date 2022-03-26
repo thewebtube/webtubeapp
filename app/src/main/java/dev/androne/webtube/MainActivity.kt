@@ -2,6 +2,7 @@ package dev.androne.webtube
 
 import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.net.Uri
@@ -21,7 +22,7 @@ import com.github.javiersantos.appupdater.enums.Duration
 import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
     private val data: Uri? = intent?.data
 
     private var webView: WebView? = null
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private var mWebViewClient: myWebViewClient? = null
     private var urlFinished = ""
     private var jsc: JSController? = null
-    private var pipMode :Boolean = false
+    private var pipMode: Boolean = false
 
     /**
      * Called when the activity is first created.
@@ -64,7 +65,11 @@ class MainActivity : AppCompatActivity() {
         if (this.data?.host?.endsWith("youtube.com") == true) {
             webView!!.loadUrl(this.data.encodedPath.toString())
         } else {
-            webView!!.loadUrl("https://m.youtube.com")
+            if (savedInstanceState != null)
+                webView!!.restoreState(savedInstanceState)
+            else
+                webView!!.loadUrl("https://m.youtube.com")
+
         }
         jsc = JSController(webView!!)
     }
@@ -78,6 +83,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
+        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString("lastURL", webView!!.url.toString())
+            apply()
+        }
         if (!isVideoView()) {
             webView!!.onPause() // don't send to youtube (to play in background)
         }
@@ -87,6 +97,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume() //To change body of overridden methods use File | Settings | File Templates
+        val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        val url = sharedPref.getString("lastURL", "https://m.youtube.com")
+        if (url != null) {
+            webView?.loadUrl(url)
+        }
         if (!isVideoView()) {
             webView!!.onResume()
         }
@@ -172,7 +187,7 @@ class MainActivity : AppCompatActivity() {
             customViewContainer!!.visibility = View.VISIBLE
             customViewContainer!!.addView(view)
             customViewCallback = callback
-            if (!pipMode){
+            if (!pipMode) {
                 hideSystemUI()
             }
         }
@@ -200,7 +215,7 @@ class MainActivity : AppCompatActivity() {
             customViewCallback!!.onCustomViewHidden()
             mCustomView = null
 
-            if (!pipMode){
+            if (!pipMode) {
                 showSystemUI()
             }
         }
@@ -263,7 +278,6 @@ class MainActivity : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
-
 
 
 }
