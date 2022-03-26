@@ -1,51 +1,38 @@
 package dev.androne.webtube
 
 import android.annotation.SuppressLint
+import android.app.PictureInPictureParams
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Base64
-import android.webkit.WebSettings
+import android.view.*
+import android.view.LayoutInflater
+import android.webkit.WebChromeClient
+import android.webkit.WebChromeClient.CustomViewCallback
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.webkit.WebChromeClient
-import android.widget.Toast
-import java.io.InputStream
-import java.lang.Exception
-import java.net.URLEncoder
-import android.app.Activity;
-import android.app.PictureInPictureParams
-import android.content.Context
-import android.content.res.Configuration
-import android.graphics.Bitmap;
-import android.view.*
-import android.webkit.WebChromeClient.CustomViewCallback
-import android.widget.FrameLayout;
-import android.webkit.WebResourceRequest
-
-import android.webkit.WebResourceResponse
-import android.webkit.ValueCallback
-import android.view.View.OnTouchListener
-import android.webkit.JavascriptInterface
-import androidx.annotation.RequiresApi
-import dev.androne.webtube.JSController
-import android.view.WindowManager
-
-
-
+import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
+import com.github.javiersantos.appupdater.AppUpdater
+import com.github.javiersantos.appupdater.enums.Display
+import com.github.javiersantos.appupdater.enums.Duration
+import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 
 class MainActivity : AppCompatActivity() {
+    private val data: Uri? = intent?.data
+
     private var webView: WebView? = null
     private var customViewContainer: FrameLayout? = null
     private var customViewCallback: CustomViewCallback? = null
     private var mCustomView: View? = null
     private var mWebChromeClient: myWebChromeClient? = null
     private var mWebViewClient: myWebViewClient? = null
-    private var urlFinished = "";
-    private var jsc: JSController? = null;
+    private var urlFinished = ""
+    private var jsc: JSController? = null
+    private var pipMode :Boolean = false
 
     /**
      * Called when the activity is first created.
@@ -54,7 +41,16 @@ class MainActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         customViewContainer = findViewById<View>(R.id.customViewContainer) as FrameLayout
+        val appUpdater = AppUpdater(this)
+            .setDisplay(Display.SNACKBAR)
+            .setDisplay(Display.NOTIFICATION)
+            .setDuration(Duration.INDEFINITE)
+            .setUpdateFrom(UpdateFrom.JSON)
+            .setUpdateJSON("https://raw.githubusercontent.com/thewebtube/webtube/main/update.json")
+        appUpdater.start()
         webView = findViewById<View>(R.id.webView) as WebView
         mWebViewClient = myWebViewClient()
         webView!!.webViewClient = mWebViewClient!!
@@ -64,23 +60,29 @@ class MainActivity : AppCompatActivity() {
         webView!!.settings.setAppCacheEnabled(true)
         webView!!.settings.builtInZoomControls = true
         webView!!.settings.saveFormData = true
-        webView!!.loadUrl("https://m.youtube.com")
+
+        if (this.data?.host?.endsWith("youtube.com") == true) {
+            webView!!.loadUrl(this.data.encodedPath.toString())
+        } else {
+            webView!!.loadUrl("https://m.youtube.com")
+        }
         jsc = JSController(webView!!)
     }
 
-    fun inCustomView(): Boolean {
+    private fun inCustomView(): Boolean {
         return mCustomView != null
     }
 
-    fun hideCustomView() {
+    private fun hideCustomView() {
         mWebChromeClient!!.onHideCustomView()
     }
 
     override fun onPause() {
-        super.onPause() //To change body of overridden methods use File | Settings | File Templates.
         if (!isVideoView()) {
-            webView!!.onPause() // don't send to youtube (to play in backgroud)
+            webView!!.onPause() // don't send to youtube (to play in background)
         }
+        super.onPause() //To change body of overridden methods use File | Settings | File Templates.
+
     }
 
     override fun onResume() {
@@ -95,9 +97,11 @@ class MainActivity : AppCompatActivity() {
         if (inCustomView()) {
             hideCustomView()
         }
+        finish()
     }
 
     override fun onUserLeaveHint() {
+
         if (isVideoView()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 setPictureInPictureParams(
@@ -105,22 +109,25 @@ class MainActivity : AppCompatActivity() {
                         .setAutoEnterEnabled(true)
                         .build()
                 )
-            }else {
+            } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     enterPictureInPictureMode()
                 }
             }
         }
+
+
     }
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
         newConfig: Configuration
     ) {
+        pipMode = isInPictureInPictureMode
+
         if (isInPictureInPictureMode) {
             // Hide the full-screen UI (controls, etc.) while in picture-in-picture mode.
             jsc?.exec("enterFullScreen")
-
         } else {
             jsc?.exec("exitFullScreen")
         }
@@ -141,7 +148,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     internal inner class myWebChromeClient : WebChromeClient() {
-        private val mDefaultVideoPoster: Bitmap? = null
         private var mVideoProgressView: View? = null
         override fun onShowCustomView(
             view: View,
@@ -166,9 +172,12 @@ class MainActivity : AppCompatActivity() {
             customViewContainer!!.visibility = View.VISIBLE
             customViewContainer!!.addView(view)
             customViewCallback = callback
-            hideSystemUI()
+            if (!pipMode){
+                hideSystemUI()
+            }
         }
 
+        @SuppressLint("InflateParams")
         override fun getVideoLoadingProgressView(): View? {
             if (mVideoProgressView == null) {
                 val inflater = LayoutInflater.from(this@MainActivity)
@@ -190,7 +199,10 @@ class MainActivity : AppCompatActivity() {
             customViewContainer!!.removeView(mCustomView)
             customViewCallback!!.onCustomViewHidden()
             mCustomView = null
-            showSystemUI()
+
+            if (!pipMode){
+                showSystemUI()
+            }
         }
     }
 
@@ -198,8 +210,8 @@ class MainActivity : AppCompatActivity() {
 
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
             val host = Uri.parse(url).host.toString()
-            val path = Uri.parse(url).path.toString()
-            if (host == "m.youtube.com" || host == "youtube.com" || host == "accounts.youtube.com" || host.contains("google")){ // for google login
+            Uri.parse(url).path.toString()
+            if (host == "m.youtube.com" || host == "youtube.com" || host.contains("accounts")) { // for google login
                 return false
             }
 
@@ -216,12 +228,12 @@ class MainActivity : AppCompatActivity() {
                 val host = Uri.parse(url).host.toString()
                 if (host == "m.youtube.com") {
                     jsc?.exec("init")
-                    Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
                 }
             }
 
-            urlFinished = url;
-            super.onPageFinished(view, url);
+            urlFinished = url
+            super.onPageFinished(view, url)
 
         }
 
@@ -243,6 +255,7 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
+
     fun showSystemUI() {
         if (supportActionBar != null) {
             supportActionBar!!.show()
@@ -250,4 +263,7 @@ class MainActivity : AppCompatActivity() {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
+
+
+
 }

@@ -24,7 +24,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
 
     private val initScript =
         """
-                    if (window.exected == undefined){
+               
                     (() => {
                       var url = "https://raw.githack.com/thewebtube/webtube/main/scripts/all.js";
                       async function runShortcut() {
@@ -42,7 +42,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                       }
                       runShortcut();
                     })();
-                    window.exected == true
+                 
                     window.addEventListener(
                     	"visibilitychange",
                     	function (event) {
@@ -50,7 +50,6 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                     	},
                     	true
                     );
-
                     window.addEventListener(
                     	"webkitvisibilitychange",
                     	function (event) {
@@ -58,7 +57,6 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                     	},
                     	true
                     );
-
                     window.addEventListener(
                     	"blur",
                     	function (event) {
@@ -66,7 +64,23 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                     	},
                     	true
                     );
+                    
+                    setInterval(()=>{
+                    try{ 
+                    document.querySelector("#app > div.page-container > ytm-browse > ytm-single-column-browse-results-renderer > div > div > ytm-sign-in-promo-with-background-renderer > ytm-promo > a.sign-in-link").href="https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=false&continue=https://m.youtube.com/"
+                    }catch(e){}
+                    
+                    try{
+                    document.querySelector("#menu > div > ytm-multi-page-menu-renderer > div > ytm-multi-page-menu-section-renderer:nth-child(2) > ytm-compact-link-renderer > a").href="https://accounts.google.com/signin/v2/identifier?service=youtube&uilel=3&passive=false&continue=https://m.youtube.com/"
+                    }catch(e){}
+                    
+                    
+                    try{
+                    document.querySelector("#menu > div > ytm-multi-page-menu-renderer > div > ytm-multi-page-menu-section-renderer > ytm-compact-link-renderer:nth-child(1) > a").href="https://accounts.google.com/signin/v2/identifier?continue=https://m.youtube.com/&app=m&hl=fr&next=%2F&hl=fr&passive=false&service=youtube&uilel=0&flowName=GlifWebSignIn&flowEntry=AddSession"
+                    }catch(e){}
                     }
+                    ,1000)
+                    
                 """.trimIndent()
 
     private val toggleFull = """
