@@ -15,7 +15,6 @@ import android.webkit.WebChromeClient.CustomViewCallback
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
@@ -101,10 +100,14 @@ open class MainActivity : AppCompatActivity() {
         super.onResume() //To change body of overridden methods use File | Settings | File Templates
         val sharedPref = this?.getPreferences(Context.MODE_PRIVATE) ?: return
         val url = sharedPref.getString("lastURL", null)
-        val path = Uri.parse(url).path
-        if (url != null && (path != "/" && path != "") ) {
-            webView?.loadUrl(url)
-            jsc = JSController(webView!!)
+        if (url != null){
+
+            val path = Uri.parse(url).path
+            if (path != "/" && path != "") {
+                webView?.loadUrl(url)
+                jsc = JSController(webView!!)
+            }
+
         }
         if (!isVideoView()) {
             webView!!.onResume()
