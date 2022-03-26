@@ -33,7 +33,6 @@
                     android:host="*.youtube.com" />
             </intent-filter>
         </activity>
-        <service android:name=".BackgroundSoundService" />
     </application>
 
 </manifest>
