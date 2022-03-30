@@ -1,12 +1,7 @@
 package dev.androne.webtube
 
-import android.os.Build
-import android.os.Handler
 import android.util.Log
 import android.webkit.WebView
-import android.widget.Toast
-import android.os.Looper
-import java.lang.Error
 
 
 class JSController(webView: WebView) {
@@ -18,14 +13,17 @@ class JSController(webView: WebView) {
     }
 
     private val togglePlay = """
-            document.querySelector("#player-control-overlay").click()
+                   document.querySelector("#player-control-overlay .player-controls-content").style.visibility = "visible"
+
 document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.player-controls-middle.center > button.icon-button.player-control-play-pause-icon").click()
+               document.querySelector("#player-control-overlay .player-controls-content").style.visibility = "hidden"
+
         """.trimIndent()
 
     private val initScript =
         """
-               
-                    (() => {
+       if (!window.executed) {
+                       (() => {
                       var url = "https://raw.githack.com/thewebtube/webtube/main/scripts/all.js";
                       async function runShortcut() {
                         try {
@@ -42,8 +40,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                       }
                       runShortcut();
                     })();
-                 
-                    window.addEventListener(
+                     window.addEventListener(
                     	"visibilitychange",
                     	function (event) {
                     		event.stopImmediatePropagation();
@@ -80,28 +77,47 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                     }catch(e){}
                     }
                     ,1000)
+                    window.executed = true
+                    
+                }
+                   
+
                     
                 """.trimIndent()
 
-    private val toggleFull = """
-        document.querySelector("#player-control-overlay").click()
-        document.querySelector("#player-control-overlay > div > div:nth-child(5) > div > button").click()
-        setTimeout(()=>{
-        document.querySelector("#player-control-overlay").click()
-        },1000)
+    private val search = """
+        document.querySelector("#header-bar > header > div > button").click()
+
     """.trimIndent()
+
+
+    private val toggleFull = """
+document.querySelector("#player-control-overlay").classList.add("fadein")
+setTimeout(()=>{
+document.querySelector("#player-control-overlay > div > div:nth-child(4) > div > button").click()
+document.querySelector("#player-control-overlay").classList.remove("fadein")
+},100)
+
+
+ """.trimIndent()
 
 
     private val exitFullScreen = """
         if(Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
-          document.exitFullscreen()
+          $toggleFull
         }
     """.trimIndent()
 
-        private val enterFullScreen = """
+    private val enterFullScreen = """
       if(!Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
          $toggleFull
         }
+    """.trimIndent()
+    private val enterFullScreenWithoutPlayer = """
+    document.getElementsByTagName('video')[0].webkitEnterFullscreen()
+    """.trimIndent()
+    private val exitFullScreenWithoutPlayer = """
+        document.getElementsByTagName('video')[0].webkitExitFullscreen()
     """.trimIndent()
 
     private fun checkIfPlay() {
@@ -132,6 +148,12 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
             script = exitFullScreen
         } else if (action == "enterFullScreen") {
             script = enterFullScreen
+        } else if (action == "search") {
+            script = search
+        } else if (action == "enterFullScreenWithoutPlayer") {
+            script = enterFullScreenWithoutPlayer
+        } else if (action == "exitFullScreenWithoutPlayer") {
+            script = exitFullScreenWithoutPlayer
         }
         try {
             webView.evaluateJavascript(script) { _ -> Log.d("SCRIPT", "Injected") }

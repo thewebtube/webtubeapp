@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
@@ -20,6 +21,18 @@ import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
 import com.github.javiersantos.appupdater.enums.Duration
 import com.github.javiersantos.appupdater.enums.UpdateFrom
+import android.widget.Toast
+
+import org.jetbrains.annotations.NotNull
+import android.graphics.BitmapFactory
+
+import android.graphics.Bitmap
+
+
+
+
+
+
 
 
 open class MainActivity : AppCompatActivity() {
@@ -61,12 +74,13 @@ open class MainActivity : AppCompatActivity() {
         webView!!.settings.setAppCacheEnabled(true)
         webView!!.settings.builtInZoomControls = false
         webView!!.settings.saveFormData = true
+        webView!!.settings.mediaPlaybackRequiresUserGesture = false;
 
-
-        if (this.data?.host?.endsWith("youtube.com") == true) {
-            webView!!.loadUrl(this.data.encodedPath.toString())
+        val host = this.data?.host
+        if (host?.endsWith("youtube.com") == true || host?.endsWith("youtu.be") == true) {
+            webView!!.loadUrl(this.data?.encodedPath.toString())
         } else {
-            webView!!.loadUrl("https://m.youtube.com")
+            webView!!.loadUrl("https://m.youtube.com/?app=m")
 
         }
         jsc = JSController(webView!!)
@@ -123,6 +137,19 @@ open class MainActivity : AppCompatActivity() {
         finish()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            jsc?.exec("enterFullScreen")
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            jsc?.exec("exitFullScreen")
+        }
+        super.onConfigurationChanged(newConfig)
+
+    }
+
+
     override fun onUserLeaveHint() {
 
         if (isVideoView()) {
@@ -170,6 +197,7 @@ open class MainActivity : AppCompatActivity() {
         return super.onKeyDown(keyCode, event)
     }
 
+
     internal inner class myWebChromeClient : WebChromeClient() {
         private var mVideoProgressView: View? = null
         override fun onShowCustomView(
@@ -182,7 +210,11 @@ open class MainActivity : AppCompatActivity() {
                 callback
             ) //To change body of overridden methods use File | Settings | File Templates.
         }
-
+        override fun getDefaultVideoPoster(): Bitmap? {
+            return if (mCustomView == null) {
+                null
+            } else BitmapFactory.decodeResource(applicationContext.resources, 2130837573)
+        }
         override fun onShowCustomView(view: View, callback: CustomViewCallback) {
 
             // if a view already exists then immediately terminate the new one
@@ -195,7 +227,9 @@ open class MainActivity : AppCompatActivity() {
             customViewContainer!!.visibility = View.VISIBLE
             customViewContainer!!.addView(view)
             customViewCallback = callback
+
             if (!pipMode) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
                 hideSystemUI()
             }
         }
@@ -223,7 +257,9 @@ open class MainActivity : AppCompatActivity() {
             customViewCallback!!.onCustomViewHidden()
             mCustomView = null
 
+
             if (!pipMode) {
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
                 showSystemUI()
             }
         }
@@ -251,6 +287,7 @@ open class MainActivity : AppCompatActivity() {
                 val host = Uri.parse(url).host.toString()
                 if (host == "m.youtube.com") {
                     jsc?.exec("init")
+
                     //Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
                 }
             }
