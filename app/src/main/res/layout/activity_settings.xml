@@ -25,6 +25,18 @@
             android:minHeight="48dp"
             android:text="DarkMode" />
 
+        <Button
+            android:id="@+id/button_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back" />
+
+        <Button
+            android:id="@+id/checkUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check Update" />
+
     </LinearLayout>
 
 

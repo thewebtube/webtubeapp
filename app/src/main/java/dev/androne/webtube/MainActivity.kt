@@ -1,6 +1,7 @@
 package dev.androne.webtube
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
@@ -21,6 +22,8 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_OFF
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_ON
@@ -38,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var javaScriptInterFace: JavaScriptInterface? = null
     private var jsc: JSController? = null
     private var THEME = "THEME"
-    var preferences: SharedPreferences = getSharedPreferences(THEME, MODE_PRIVATE)
+
 
     @SuppressLint("SetJavaScriptEnabled", "WrongViewCast", "JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,16 +93,9 @@ class MainActivity : AppCompatActivity() {
             webSettings.loadWithOverviewMode = true
             webSettings.setAppCacheEnabled(true)
             webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
+            initTheme()
 
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                if (preferences.getString("COLOR","DARK").equals("DARK")) {
-                    WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_ON)
-                } else {
-                    WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_OFF)
-                }
-                    
 
-            }
 
             if (Build.VERSION.SDK_INT >= 21) {
                 webSettings.mixedContentMode = 0
@@ -114,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                     webView: WebView,
                     errorCode: Int,
                     description: String,
-                    failingUrl: String
+                    failingUrl: String,
                 ) {
                     try {
                         webView.stopLoading()
@@ -172,7 +168,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onShowCustomView(
                     paramView: View,
-                    paramCustomViewCallback: CustomViewCallback
+                    paramCustomViewCallback: CustomViewCallback,
                 ) {
                     if (mCustomView != null) {
                         onHideCustomView()
@@ -241,6 +237,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        initTheme()
+    }
+
     private val isNetworkAvailable: Boolean
         private get() {
             val connectivityManager = this
@@ -250,4 +251,20 @@ class MainActivity : AppCompatActivity() {
             return activeNetworkInfo != null
         }
 
+    private fun initTheme(){
+        val preferences: SharedPreferences = this.getSharedPreferences(THEME, MODE_PRIVATE)
+        val webSettings = webView!!.settings
+        if (preferences.getString("COLOR", "DARK") == "DARK") {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_ON)
+            }
+        } else {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_OFF)
+            }
+        }
+
+    }
 }

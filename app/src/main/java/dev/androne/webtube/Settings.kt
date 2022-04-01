@@ -8,13 +8,23 @@ import dev.androne.webtube.databinding.ActivitySettingsBinding
 import android.content.Intent
 import android.app.UiModeManager
 import android.content.SharedPreferences
+import android.content.ComponentName
+import android.content.Context
+
+import android.content.pm.PackageManager
+import android.view.View
+import android.widget.Button
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
+import com.github.javiersantos.appupdater.AppUpdater
+import com.github.javiersantos.appupdater.enums.Display
+import com.github.javiersantos.appupdater.enums.Duration
+import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 
 class Settings : AppCompatActivity() {
 
     private var THEME = "THEME"
-    var preferences: SharedPreferences = getSharedPreferences(THEME, MODE_PRIVATE)
-    var editor = preferences.edit()
+
 
     private lateinit var binding: ActivitySettingsBinding
 
@@ -23,26 +33,58 @@ class Settings : AppCompatActivity() {
 
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val preferences: SharedPreferences = this.getSharedPreferences(THEME, MODE_PRIVATE)
+        val editor = preferences.edit()
+
+        val appUpdater = AppUpdater(this)
+            .setDisplay(Display.DIALOG)
+            //.setDisplay(Display.NOTIFICATION)
+            .setDuration(Duration.INDEFINITE)
+            .setUpdateFrom(UpdateFrom.JSON)
+            .showAppUpdated(true)
+            .setUpdateJSON("https://raw.githubusercontent.com/thewebtube/webtube/main/update.json")
+
+
+        binding.darkswitch.isChecked = preferences.getString("COLOR","DARK").equals("DARK") && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
 
         binding.darkswitch.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 true -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    editor.putString(THEME,"DARK")
+                    editor.putString("COLOR","DARK")
                     editor.apply()
+                    //triggerRebirth()
                 }
                 false -> {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    editor.putString(THEME,"LiGHT")
+                    editor.putString("COLOR","LIGHT")
                     editor.apply()
+                    //triggerRebirth()
                 }
 
-            }
-        }
 
-        binding.darkswitch.isChecked = preferences.getString("COLOR","BLACK").equals("DARK")
+            }
+
+        }
+        binding.buttonBack.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                back()
+            }
+        })
+
+        binding.checkUpdate.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                appUpdater.start()
+            }
+        })
+
+
 
     }
 
+    private fun back(){
+        val intent = Intent(this, MainActivity::class.java)
+        this.startActivity(intent)
+    }
 
 }
