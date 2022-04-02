@@ -1,10 +1,12 @@
 package dev.androne.webtube
 
 import android.annotation.SuppressLint
+import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
@@ -36,7 +38,7 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 class MainActivity : AppCompatActivity() {
     private var urlFinished: String = ""
-    var webView: WebView? = null
+    var webView: customWebView? = null
     var progressBar: ProgressBar? = null
     private var javaScriptInterFace: JavaScriptInterface? = null
     private var jsc: JSController? = null
@@ -123,10 +125,10 @@ class MainActivity : AppCompatActivity() {
                     webView.loadUrl("about:blank")
                     val alertDialog = AlertDialog.Builder(this@MainActivity).create()
                     alertDialog.setTitle("Error")
-                    alertDialog.setMessage("Check your internet connection and try again.")
+                    alertDialog.setMessage(getString(R.string.check_internet))
                     alertDialog.setButton(
                         DialogInterface.BUTTON_POSITIVE,
-                        "Try Again"
+                        getString(R.string.try_again)
                     ) { dialog, which ->
                         finish()
                         startActivity(intent)
@@ -237,13 +239,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onResume() {
         super.onResume()
         initTheme()
     }
 
     private val isNetworkAvailable: Boolean
-        private get() {
+        get() {
             val connectivityManager = this
                 .getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
             val activeNetworkInfo = connectivityManager
@@ -266,5 +269,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+    private fun isVideoView(): Boolean {
+        return webView?.url.toString().contains("youtube.com/watch?v=")
     }
 }

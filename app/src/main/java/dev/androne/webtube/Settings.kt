@@ -1,5 +1,6 @@
 package dev.androne.webtube
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -12,6 +13,7 @@ import android.content.ComponentName
 import android.content.Context
 
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.view.View
 import android.widget.Button
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
@@ -19,6 +21,10 @@ import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
 import com.github.javiersantos.appupdater.enums.Duration
 import com.github.javiersantos.appupdater.enums.UpdateFrom
+import android.content.pm.PackageInfo
+
+
+
 
 
 class Settings : AppCompatActivity() {
@@ -28,6 +34,7 @@ class Settings : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,7 +53,7 @@ class Settings : AppCompatActivity() {
 
 
         binding.darkswitch.isChecked = preferences.getString("COLOR","DARK").equals("DARK") && AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
-
+        binding.backgroundswitch.isChecked = preferences.getBoolean("BACKGROUND_MODE",true)
         binding.darkswitch.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 true -> {
@@ -66,19 +73,30 @@ class Settings : AppCompatActivity() {
             }
 
         }
-        binding.buttonBack.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                back()
+        binding.backgroundswitch.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                true -> {
+                    editor.putBoolean("BACKGROUND_MODE",true)
+                    editor.apply()
+                    //triggerRebirth()
+                }
+                false -> {
+                    editor.putBoolean("BACKGROUND_MODE",false)
+                    editor.apply()
+                    //triggerRebirth()
+                }
+
+
             }
-        })
 
-        binding.checkUpdate.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                appUpdater.start()
-            }
-        })
+        }
+        binding.buttonBack.setOnClickListener { back() }
 
+        binding.checkUpdate.setOnClickListener { appUpdater.start() }
 
+        binding.openDiscord.setOnClickListener { openDiscord() }
+
+        binding.info.text = "WebTube | ${getVersionInfo()}"
 
     }
 
@@ -86,5 +104,24 @@ class Settings : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         this.startActivity(intent)
     }
-
+    private fun openDiscord(){
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/ypdkWPm9yD"))
+        this.startActivity(intent)
+    }
+    fun getVersionInfo(): String? {
+        var strVersion = "v"
+        val packageInfo: PackageInfo
+        try {
+            packageInfo = applicationContext
+                .packageManager
+                .getPackageInfo(
+                    applicationContext.packageName,
+                    0
+                )
+            strVersion += packageInfo.versionName
+        } catch (e: PackageManager.NameNotFoundException) {
+            strVersion += "Unknown"
+        }
+        return strVersion
+    }
 }

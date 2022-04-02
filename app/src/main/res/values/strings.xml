@@ -9,6 +9,14 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="back">Back</string>
+    <string name="check_update">Check Update</string>
+    <string name="darkmode">DarkMode</string>
+    <string name="todo">TODO</string>
+    <string name="open_discord">Open Discord</string>
+    <string name="check_internet">Check your internet connection and try again.</string>
+    <string name="try_again">Try Again</string>
+    <string name="background_mode">Background mode</string>
 
 
 </resources>

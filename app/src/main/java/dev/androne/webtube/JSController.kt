@@ -72,7 +72,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
     
     
     try{
-    document.querySelector("#menu > div > ytm-multi-page-menu-renderer > div > ytm-multi-page-menu-section-renderer > ytm-compact-link-renderer:nth-child(1) > a").href="https://accounts.google.com/signin/v2/identifier?continue=https://m.youtube.com/&app=m&hl=fr&next=%2F&hl=fr&passive=false&service=youtube&uilel=0&flowName=GlifWebSignIn&flowEntry=AddSession"
+    document.querySelector("#menu > div > ytm-multi-page-menu-renderer > div > ytm-multi-page-menu-section-renderer > ytm-compact-link-renderer:nth-child(1) > a").href="https://accounts.google.com/signin/v2/identifier?continue=https://m.youtube.com/&app=m&next=%2F&passive=false&service=youtube&uilel=0&flowName=GlifWebSignIn&flowEntry=AddSession"
     }catch(e){}
     }
     
@@ -95,6 +95,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
     }
     
     setInterval(insertSettings,500)
+
     
     window.executed = true
     }
@@ -109,31 +110,32 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
 
 
     private val toggleFull = """
-    document.querySelector("#player-control-overlay").classList.add("fadein")
-    setTimeout(()=>{
-    document.querySelector("#player-control-overlay > div > div:nth-child(4) > div > button").click()
-    document.querySelector("#player-control-overlay").classList.remove("fadein")
-    },100)
+   
+    document.querySelector(".fullscreen-icon").click()
+
      """.trimIndent()
 
 
     private val exitFullScreen = """
         if(Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
+          try{
           $toggleFull
+          catch(e){
+      
+          }
         }
     """.trimIndent()
 
     private val enterFullScreen = """
       if(!Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
-         $toggleFull
-        }
+            try{
+          $toggleFull
+          catch(e){
+        
+          }        
+       }
     """.trimIndent()
-    private val enterFullScreenWithoutPlayer = """
-    document.getElementsByTagName('video')[0].webkitEnterFullscreen()
-    """.trimIndent()
-    private val exitFullScreenWithoutPlayer = """
-        document.getElementsByTagName('video')[0].webkitExitFullscreen()
-    """.trimIndent()
+
 
     private fun checkIfPlay() {
         val script = """
@@ -165,10 +167,6 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
             script = enterFullScreen
         } else if (action == "search") {
             script = search
-        } else if (action == "enterFullScreenWithoutPlayer") {
-            script = enterFullScreenWithoutPlayer
-        } else if (action == "exitFullScreenWithoutPlayer") {
-            script = exitFullScreenWithoutPlayer
         }
         try {
             webView.evaluateJavascript(script) { _ -> Log.d("SCRIPT", "Injected") }
