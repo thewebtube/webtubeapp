@@ -1,4 +1,4 @@
-package dev.androne.webtube
+package dev.androne.webtubeapp
 
 import org.junit.Test
 

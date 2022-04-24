@@ -1,7 +1,6 @@
-package dev.androne.webtube
+package xyz.webtubeapp
 
 import android.content.Context
-import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
 import android.webkit.JavascriptInterface
 

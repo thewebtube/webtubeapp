@@ -17,6 +17,11 @@
     <string name="check_internet">Check your internet connection and try again.</string>
     <string name="try_again">Try Again</string>
     <string name="background_mode">Background mode</string>
+    <string name="cancel">cancel</string>
+    <string name="ok">Ok</string>
+    <string name="dialog_message_uninstall_old_package">An old version of the application has been discovered, do you want to delete it?</string>
+    <string name="dialog_title_uninstall_old_package">Information</string>
+    <string name="manually_uninstall_old_package">\"if nothing is displayed, you can uninstall the old version of the application manually \"</string>
 
 
 </resources>

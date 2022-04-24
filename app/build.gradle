@@ -7,7 +7,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "dev.androne.webtube"
+        applicationId "xyz.webtubeapp"
         minSdk 21
         targetSdk 32
         versionCode 4

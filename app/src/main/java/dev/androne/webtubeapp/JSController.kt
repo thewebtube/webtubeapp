@@ -1,4 +1,4 @@
-package dev.androne.webtube
+package xyz.webtubeapp
 
 import android.util.Log
 import android.webkit.WebView

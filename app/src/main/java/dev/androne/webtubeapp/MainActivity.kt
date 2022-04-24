@@ -1,11 +1,10 @@
-package dev.androne.webtube
+package xyz.webtubeapp
 
 import android.annotation.SuppressLint
-import android.app.PictureInPictureParams
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -43,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private var javaScriptInterFace: JavaScriptInterface? = null
     private var jsc: JSController? = null
     private var THEME = "THEME"
+    private var utils :utils = utils()
 
 
     @SuppressLint("SetJavaScriptEnabled", "WrongViewCast", "JavascriptInterface")
@@ -57,8 +57,10 @@ class MainActivity : AppCompatActivity() {
             .setUpdateFrom(UpdateFrom.JSON)
             //.showAppUpdated(true)
             .setUpdateJSON("https://raw.githubusercontent.com/thewebtube/webtube/main/update.json")
+
         appUpdater.start()
 
+        utils.askToUninstallOldApk(this)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
@@ -273,4 +275,6 @@ class MainActivity : AppCompatActivity() {
     private fun isVideoView(): Boolean {
         return webView?.url.toString().contains("youtube.com/watch?v=")
     }
+
+
 }

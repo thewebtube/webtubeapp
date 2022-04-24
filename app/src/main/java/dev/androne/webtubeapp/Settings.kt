@@ -1,11 +1,10 @@
-package dev.androne.webtube
+package xyz.webtubeapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.snackbar.Snackbar
-import dev.androne.webtube.databinding.ActivitySettingsBinding
 import android.content.Intent
 import android.app.UiModeManager
 import android.content.SharedPreferences
@@ -22,9 +21,7 @@ import com.github.javiersantos.appupdater.enums.Display
 import com.github.javiersantos.appupdater.enums.Duration
 import com.github.javiersantos.appupdater.enums.UpdateFrom
 import android.content.pm.PackageInfo
-
-
-
+import xyz.webtubeapp.databinding.ActivitySettingsBinding
 
 
 class Settings : AppCompatActivity() {

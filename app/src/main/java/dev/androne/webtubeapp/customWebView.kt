@@ -1,4 +1,4 @@
-package dev.androne.webtube
+package xyz.webtubeapp
 
 import android.content.Context
 import android.content.SharedPreferences
