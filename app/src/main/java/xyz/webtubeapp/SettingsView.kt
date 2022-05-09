@@ -17,7 +17,7 @@ import android.content.pm.PackageInfo
 import xyz.webtubeapp.databinding.ActivitySettingsBinding
 
 
-class Settings : AppCompatActivity() {
+class SettingsView : AppCompatActivity() {
 
     private var THEME = "THEME"
 

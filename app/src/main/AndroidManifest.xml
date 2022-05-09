@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Webtube" >
         <activity
-            android:name="xyz.webtubeapp.Settings"
+            android:name="xyz.webtubeapp.SettingsView"
             android:exported="false"
             android:label="@string/title_activity_settings"
             android:theme="@style/Theme.Webtube.NoActionBar" />

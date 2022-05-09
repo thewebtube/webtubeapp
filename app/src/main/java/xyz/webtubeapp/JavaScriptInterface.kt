@@ -9,7 +9,7 @@ class JavaScriptInterface(var mContext: Context) {
     fun openSettings(): Int {
         val myIntent = Intent(
             mContext,
-            Settings::class.java
+            SettingsView::class.java
         )
 
         mContext.startActivity(myIntent)
