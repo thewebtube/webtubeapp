@@ -4,18 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.android.material.snackbar.Snackbar
 import android.content.Intent
-import android.app.UiModeManager
 import android.content.SharedPreferences
-import android.content.ComponentName
-import android.content.Context
 
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.view.View
-import android.widget.Button
-import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
 import com.github.javiersantos.appupdater.enums.Duration

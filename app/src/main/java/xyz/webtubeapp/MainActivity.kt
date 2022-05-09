@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
@@ -24,7 +22,6 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.preference.PreferenceManager
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_OFF
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_ON
@@ -42,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private var javaScriptInterFace: JavaScriptInterface? = null
     private var jsc: JSController? = null
     private var THEME = "THEME"
-    private var utils :utils = utils()
 
 
     @SuppressLint("SetJavaScriptEnabled", "WrongViewCast", "JavascriptInterface")
@@ -60,7 +56,6 @@ class MainActivity : AppCompatActivity() {
 
         appUpdater.start()
 
-        utils.askToUninstallOldApk(this)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,

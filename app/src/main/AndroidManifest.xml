@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <queries>
-        <package android:name="dev.androne.webtube" />
+        <package android:name="dev.webtubeapp.webtube" />
     </queries>
     <application
         android:allowBackup="true"

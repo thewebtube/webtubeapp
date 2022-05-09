@@ -19,6 +19,8 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
                document.querySelector("#player-control-overlay .player-controls-content").style.visibility = "hidden"
 
         """.trimIndent()
+
+    // TODO : make the repo system
     private val initScript =
         """
        if (!window.executed) {
