@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -149,12 +150,6 @@ class MainActivity : AppCompatActivity() {
                 private var mOriginalOrientation = 0
                 private var mOriginalSystemUiVisibility = 0
 
-                // ChromeClient() {}
-                override fun getDefaultVideoPoster(): Bitmap? {
-                    return if (mCustomView == null) {
-                        null
-                    } else BitmapFactory.decodeResource(applicationContext.resources, 2130837573)
-                }
 
                 override fun onHideCustomView() {
                     (window.decorView as FrameLayout).removeView(mCustomView)
@@ -187,6 +182,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onProgressChanged(view: WebView, progress: Int) {
                     //                    getActivity().setProgress(progress * 100);
                     if (progress == 100) progressBar!!.visibility = View.GONE
+                }
+
+                override fun getDefaultVideoPoster(): Bitmap? {
+                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
                 }
             }
             webView!!.webViewClient = object : WebViewClient() {
