@@ -112,7 +112,6 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
         addStyle(`
           body {
            -webkit-tap-highlight-color:transparent !Important;
-
           }
         `);
 
@@ -168,6 +167,11 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
 
     }
 
+    private val popup = """
+        let tps = document.querySelector("#movie_player video").currentTime
+        WT.popup(document.URL+"&t="+tps)
+    """.trimIndent()
+
     fun exec(action: String) {
         var script = ""
         if (action == "togglePlay") {
@@ -182,6 +186,8 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
             script = enterFullScreen
         } else if (action == "search") {
             script = search
+        }else if (action == "popup"){
+            script = popup
         }
         try {
             webView.evaluateJavascript(script) { _ -> Log.d("SCRIPT", "Injected") }
