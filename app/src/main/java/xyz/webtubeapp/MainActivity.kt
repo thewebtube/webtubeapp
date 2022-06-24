@@ -1,11 +1,12 @@
 package xyz.webtubeapp
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -19,6 +20,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -55,6 +57,14 @@ class MainActivity : AppCompatActivity() {
             .setUpdateJSON("https://raw.githubusercontent.com/thewebtube/webtube/main/update.json")
 
         appUpdater.start()
+
+        // Uninstall old apk
+        if (isPackageInstalled(this,"dev.androne.webtube")){
+            Toast.makeText(this, getString(R.string.dialog_message_uninstall_old_package), Toast.LENGTH_LONG).show()
+            val intent = Intent(Intent.ACTION_DELETE)
+            intent.data = Uri.parse("package:dev.androne.webtube")
+            startActivity(intent)
+        }
 
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.setFlags(
@@ -149,12 +159,6 @@ class MainActivity : AppCompatActivity() {
                 private var mOriginalOrientation = 0
                 private var mOriginalSystemUiVisibility = 0
 
-                // ChromeClient() {}
-                override fun getDefaultVideoPoster(): Bitmap? {
-                    return if (mCustomView == null) {
-                        null
-                    } else BitmapFactory.decodeResource(applicationContext.resources, 2130837573)
-                }
 
                 override fun onHideCustomView() {
                     (window.decorView as FrameLayout).removeView(mCustomView)
@@ -187,6 +191,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onProgressChanged(view: WebView, progress: Int) {
                     //                    getActivity().setProgress(progress * 100);
                     if (progress == 100) progressBar!!.visibility = View.GONE
+                }
+
+                override fun getDefaultVideoPoster(): Bitmap? {
+                    return Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
                 }
             }
             webView!!.webViewClient = object : WebViewClient() {
@@ -236,10 +244,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onResume() {
-        super.onResume()
         initTheme()
+        super.onResume()
+    }
+
+    override fun onPause() {
+        if (this.isVideoView()){
+            jsc!!.exec("popup")
+        }
+        super.onPause()
     }
 
     private val isNetworkAvailable: Boolean
@@ -260,8 +274,8 @@ class MainActivity : AppCompatActivity() {
                 WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_ON)
             }
         } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 WebSettingsCompat.setForceDark(webSettings, FORCE_DARK_OFF)
             }
         }
@@ -270,6 +284,11 @@ class MainActivity : AppCompatActivity() {
     private fun isVideoView(): Boolean {
         return webView?.url.toString().contains("youtube.com/watch?v=")
     }
-
+    private fun isPackageInstalled(context: Context, packageName: String?): Boolean {
+        val packageManager: PackageManager = context.packageManager
+        val intent = packageManager.getLaunchIntentForPackage(packageName!!) ?: return false
+        val list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return list.size > 0
+    }
 
 }

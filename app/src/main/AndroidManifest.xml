@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="xyz.webtubeapp" >
 
-    <uses-permission android:name="android.permission.DELETE_PACKAGES"
-        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+
     <queries>
         <package android:name="dev.webtubeapp.webtube" />
     </queries>
@@ -17,12 +17,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Webtube" >
+        android:theme="@style/AppTheme" >
         <activity
             android:name="xyz.webtubeapp.SettingsView"
             android:exported="false"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/Theme.Webtube.NoActionBar" />
+            android:label="@string/title_activity_settings" />
         <activity
             android:name="xyz.webtubeapp.MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
@@ -45,6 +44,11 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name="xyz.webtubeapp.PipYtService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>
