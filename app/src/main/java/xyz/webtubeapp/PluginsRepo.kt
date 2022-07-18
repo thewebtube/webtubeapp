@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.jakewharton.processphoenix.ProcessPhoenix
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -16,6 +17,12 @@ class PluginsRepo(context: Context) {
     private var dbHelper : PluginDBHelper = PluginDBHelper(context)
     private var db = dbHelper.writableDatabase
     init {
+        var needsUpdate = false
+
+        val c = db.rawQuery("SELECT * FROM plugins", null)
+        if (c.count == 0) {
+            needsUpdate = true
+        }
 
         val queue = Volley.newRequestQueue(context)
 
@@ -35,6 +42,8 @@ class PluginsRepo(context: Context) {
                         "SELECT * FROM plugins WHERE url = ?",
                         arrayOf(url)
                     )
+
+
                     if (c.moveToFirst()) {
                         db.execSQL(
                             "UPDATE plugins SET url = ?, injectOnUrlChange = ? WHERE name = ?",
@@ -45,6 +54,7 @@ class PluginsRepo(context: Context) {
                             "INSERT INTO plugins (name, url, enabled, injectOnUrlChange) VALUES (?, ?, ?, ?)",
                             arrayOf(name, url, enabled, injectOnUrlChange)
                         )
+
                     }
 
                     // find old plugins and delete them
@@ -83,11 +93,24 @@ class PluginsRepo(context: Context) {
                         } while (c2.moveToNext())
                     }
 
+
+
                 }
+
+                if (needsUpdate) {
+                    // restart app
+                    Toast.makeText(context, "loading, please wait", Toast.LENGTH_SHORT).show()
+                    Thread.sleep(1000)
+                    ProcessPhoenix.triggerRebirth(context)
+
+                }
+
+
             },
             {})
         // Add the request to the RequestQueue.
         queue.add(stringRequest)
+
 
 // Add the request
     }

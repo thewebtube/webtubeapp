@@ -36,7 +36,8 @@ class PluginDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     private var context: Context? = context
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
-        ProcessPhoenix.triggerRebirth(context) // fix first time db creation bug
+
+
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // This database is only a cache for online data, so its upgrade policy is
@@ -50,6 +51,7 @@ class PluginDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     fun getAllPlugins(): List<Plugin> {
         val db = readableDatabase
+        // if the table is empty, wait
         val cursor = db.query(PluginDB.PluginEntry.TABLE_NAME,
             arrayOf(
                 BaseColumns._ID,
@@ -85,6 +87,7 @@ class PluginDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
 
     }
+
 
     companion object {
         // If you change the database schema, you must increment the database version.

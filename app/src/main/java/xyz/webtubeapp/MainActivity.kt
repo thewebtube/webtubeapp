@@ -1,13 +1,9 @@
 package xyz.webtubeapp
 
 import android.annotation.SuppressLint
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.*
+import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.media.AudioManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
@@ -21,11 +17,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_OFF
@@ -35,7 +29,6 @@ import com.github.javiersantos.appupdater.AppUpdater
 import com.github.javiersantos.appupdater.enums.Display
 import com.github.javiersantos.appupdater.enums.Duration
 import com.github.javiersantos.appupdater.enums.UpdateFrom
-import xyz.webtubeapp.BackgroundPlayHelper
 
 
 class MainActivity : AppCompatActivity() {
@@ -237,6 +230,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     urlFinished = url
+
+
                     super.onPageFinished(view, url)
 
                 }
@@ -257,7 +252,12 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (isVideoView()) {
+            jsc!!.exec("toggleFull")
+        }
+    }
     override fun onResume() {
         initTheme()
         super.onResume()
