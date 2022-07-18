@@ -5,11 +5,16 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.28958333333333336" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_plugins_view.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_floating_widget.xml" value="0.19610507246376813" />
+        <entry key="app/src/main/res/layout/plugin_view.xml" value="0.19519927536231885" />
+        <entry key="app/src/main/res/layout/plugins_list_item.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/video_progress.xml" value="0.14764492753623187" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.15104166666666666" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.15104166666666666" />
+        <entry key="app/src/main/res/xml/file_provider_paths.xml" value="0.19519927536231885" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.19519927536231885" />
       </map>
     </option>
   </component>
