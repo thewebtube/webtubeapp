@@ -26,7 +26,6 @@ class SettingsView : AppCompatActivity() {
 
 
     private lateinit var binding: ActivitySettingsBinding
-    lateinit var sp: SharedPreferences
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +102,7 @@ class SettingsView : AppCompatActivity() {
 
     private fun rustartApp() {
         Toast.makeText(this, "Restarting app..", Toast.LENGTH_LONG).show()
-        ProcessPhoenix.triggerRebirth(this);
+        ProcessPhoenix.triggerRebirth(this)
     }
     private fun back(){
 
@@ -119,7 +118,7 @@ class SettingsView : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://discord.gg/ypdkWPm9yD"))
         this.startActivity(intent)
     }
-    fun getVersionInfo(): String? {
+    fun getVersionInfo(): String {
         var strVersion = "v"
         val packageInfo: PackageInfo
         try {

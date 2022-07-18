@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import android.util.Log
 import android.widget.Toast
+import com.jakewharton.processphoenix.ProcessPhoenix
 import org.json.JSONObject
 
 object PluginDB {
@@ -32,8 +33,10 @@ private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ${PluginDB.PluginEn
 
 
 class PluginDBHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+    private var context: Context? = context
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
+        ProcessPhoenix.triggerRebirth(context) // fix first time db creation bug
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // This database is only a cache for online data, so its upgrade policy is
