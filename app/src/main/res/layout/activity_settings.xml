@@ -15,10 +15,13 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="136dp"
+            android:layout_height="150dp"
+            android:adjustViewBounds="false"
             android:background="#050A2A"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:contentDescription="@string/todo" />
+            android:contentDescription="@string/todo"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/banner" />
 
         <LinearLayout
             android:id="@+id/settings"
@@ -67,16 +70,28 @@
                         android:minHeight="48dp"
                         android:text="@string/background_mode"
                         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/PluginManagerBtn"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="@string/open_plugin_manager"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                />
 
             <Button
                 android:id="@+id/checkUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/check_update"
-            />
+                android:layout_marginTop="20dp"
+                />
 
             <Button
                 android:id="@+id/openDiscord"
@@ -89,6 +104,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/back" />
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="xyz.webtubeapp.PluginManagerView"
+                >
+
+            </FrameLayout>
 
         </LinearLayout>
 

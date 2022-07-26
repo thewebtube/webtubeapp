@@ -1,11 +1,8 @@
 package xyz.webtubeapp
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.SharedPreferences
-import android.content.pm.PackageManager
+import android.content.*
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Uri
@@ -20,10 +17,10 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_OFF
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_ON
@@ -35,36 +32,41 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 
 class MainActivity : AppCompatActivity() {
+    val ACTION_TOGGLE_PLAY = "togglePlay"
+
+
     private var urlFinished: String = ""
     var webView: customWebView? = null
     var progressBar: ProgressBar? = null
     private var javaScriptInterFace: JavaScriptInterface? = null
-    private var jsc: JSController? = null
+    var jsc: JSController? = null
     private var THEME = "THEME"
-
-
+    private var backgroundPlayHelper : BackgroundPlayHelper? = null
+    var togglePlay: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            jsc?.exec("togglePlay")
+        }
+    }
     @SuppressLint("SetJavaScriptEnabled", "WrongViewCast", "JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         val appUpdater = AppUpdater(this)
             .setDisplay(Display.DIALOG)
             //.setDisplay(Display.NOTIFICATION)
             .setDuration(Duration.INDEFINITE)
             .setUpdateFrom(UpdateFrom.JSON)
+            .setUpdateFrom(UpdateFrom.GITHUB)
             //.showAppUpdated(true)
             .setUpdateJSON("https://raw.githubusercontent.com/thewebtube/webtube/main/update.json")
+            .setGitHubUserAndRepo("thewebtube", "webtube")
 
         appUpdater.start()
 
-        // Uninstall old apk
-        if (isPackageInstalled(this,"dev.androne.webtube")){
-            Toast.makeText(this, getString(R.string.dialog_message_uninstall_old_package), Toast.LENGTH_LONG).show()
-            val intent = Intent(Intent.ACTION_DELETE)
-            intent.data = Uri.parse("package:dev.androne.webtube")
-            startActivity(intent)
-        }
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(togglePlay,  IntentFilter(ACTION_TOGGLE_PLAY))
 
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         window.setFlags(
@@ -74,7 +76,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.hide()
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progress_bar_home)
-        jsc = JSController(webView!!)
+        jsc = JSController(webView!!, this)
+        backgroundPlayHelper =  BackgroundPlayHelper(this, webView!!)
         if (!isNetworkAvailable) {
             val a_builder1 = AlertDialog.Builder(this)
             a_builder1.setMessage("No Internet Connection Please Check Internet Connection !!!")
@@ -101,6 +104,8 @@ class MainActivity : AppCompatActivity() {
             webSettings.useWideViewPort = true
             webSettings.loadWithOverviewMode = true
             webSettings.setAppCacheEnabled(true)
+            webView!!.settings.mediaPlaybackRequiresUserGesture = false;
+
             webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
             initTheme()
 
@@ -225,6 +230,8 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     urlFinished = url
+
+
                     super.onPageFinished(view, url)
 
                 }
@@ -241,17 +248,31 @@ class MainActivity : AppCompatActivity() {
                 }
                 false
             })
+
+        }
+
+    }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (isVideoView()) {
+            jsc!!.exec("toggleFull")
         }
     }
-
     override fun onResume() {
         initTheme()
         super.onResume()
+        backgroundPlayHelper!!.hideBackgroundPlaybackNotification();
+
     }
 
     override fun onPause() {
-        if (this.isVideoView()){
-            jsc!!.exec("popup")
+        //if (this.isVideoView()){
+        //    jsc!!.exec("popup")
+        //}
+        if (backgroundPlayHelper!!.isBackgroundPlayEnabled) {
+            backgroundPlayHelper!!.playInBackground();
+        } else {
+            jsc?.exec("pause")
         }
         super.onPause()
     }
@@ -284,11 +305,11 @@ class MainActivity : AppCompatActivity() {
     private fun isVideoView(): Boolean {
         return webView?.url.toString().contains("youtube.com/watch?v=")
     }
-    private fun isPackageInstalled(context: Context, packageName: String?): Boolean {
-        val packageManager: PackageManager = context.packageManager
-        val intent = packageManager.getLaunchIntentForPackage(packageName!!) ?: return false
-        val list = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        return list.size > 0
-    }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        backgroundPlayHelper!!.hideBackgroundPlaybackNotification();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(togglePlay)
+    }
 }

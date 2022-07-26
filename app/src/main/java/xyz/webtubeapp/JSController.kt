@@ -1,24 +1,20 @@
 package xyz.webtubeapp
 
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.webkit.WebView
 
 
-class JSController(webView: WebView) {
+class JSController(webView: WebView, context : Context) {
     private val webView: WebView = webView
     var isPlay: Boolean = false
+    var pluginsRepo : PluginsRepo = PluginsRepo(context)
 
     init {
         this.exec("init")
     }
 
-    private val togglePlay = """
-                   document.querySelector("#player-control-overlay .player-controls-content").style.visibility = "visible"
-
-document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.player-controls-middle.center > button.icon-button.player-control-play-pause-icon").click()
-               document.querySelector("#player-control-overlay .player-controls-content").style.visibility = "hidden"
-
-        """.trimIndent()
 
     // TODO : make the repo system
     private val initScript =
@@ -31,21 +27,7 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
             
        if (!window.executed) {
        (() => {
-              var url = "https://raw.githack.com/thewebtube/webtube/main/scripts/all.js";
-              async function runShortcut() {
-                try {
-                  const response = await fetch(url);
-                  const text = await response.text();
-                  try {
-                    eval(text);
-                  } catch (ex) {
-                    completion(ex);
-                  }
-                } catch (ex) {
-                  completion(ex.toString());
-                }
-              }
-              runShortcut();
+          ${pluginsRepo.getJsScript()}
         })();
          window.addEventListener(
             "visibilitychange",
@@ -150,22 +132,13 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
        }
     """.trimIndent()
 
+    private val play = """
+       document.getElementsByTagName('video')[0].play();
+    """.trimIndent()
 
-    private fun checkIfPlay() {
-        val script = """
-            function () {
-            return document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.player-controls-middle.center > button.icon-button.player-control-play-pause-icon").getAttribute("aria-pressed")
-            }
-        """.trimIndent()
-        Log.i("PLAYER", "Checking..")
-
-        webView.evaluateJavascript("($script)();") { value ->
-            // Execute onReceiveValue's code
-            isPlay = (value == "\"false\"")
-            Log.i("PLAYER", isPlay.toString())
-        }
-
-    }
+    private val pause = """
+       document.getElementsByTagName('video')[0].pause();
+    """.trimIndent()
 
     private val popup = """
         let tps = document.querySelector("#movie_player video").currentTime
@@ -175,9 +148,22 @@ document.querySelector("#player-control-overlay > div > div:nth-child(4) > div.p
     fun exec(action: String) {
         var script = ""
         if (action == "togglePlay") {
-            script = togglePlay
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                webView.evaluateJavascript(
+                    "(function() { return document.getElementsByTagName('video')[0].paused; })();"
+                ) { value: String ->
+                    if (value == "true") {
+                        script = play
+                    } else {
+                        script = pause
+                    }
+                }
+            } else {
+                script = pause
+            }
         } else if (action == "init") {
             script = initScript
+            Log.d("jsc", "init Script : " + initScript)
         } else if (action == "toggleFull") {
             script = toggleFull
         } else if (action == "exitFullScreen") {

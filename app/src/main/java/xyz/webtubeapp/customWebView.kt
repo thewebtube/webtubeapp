@@ -17,10 +17,11 @@ class customWebView : WebView {
     }
 
     override fun onWindowVisibilityChanged(visibility: Int) {
-        val preferences: SharedPreferences = this.context.getSharedPreferences("THEME",
+        val preferences: SharedPreferences = this.context.getSharedPreferences("backgroundPlayEnabled",
             AppCompatActivity.MODE_PRIVATE)
 
-        if (visibility != GONE && visibility != INVISIBLE || !this.url.toString().contains("youtube.com/watch?v=") || !preferences.getBoolean("BACKGROUND_MODE",true)) super.onWindowVisibilityChanged(
+       if (visibility != GONE && visibility != INVISIBLE || !this.url.toString().contains("youtube.com/watch?v=") || !preferences.getBoolean("backgroundPlayEnabled",true)) super.onWindowVisibilityChanged(
             visibility)
     }
+
 }
