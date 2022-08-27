@@ -30,6 +30,7 @@
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:screenOrientation="sensor"
             android:exported="true"
             android:launchMode="singleTask"
             android:supportsPictureInPicture="true">

@@ -2,14 +2,17 @@ package xyz.webtubeapp
 
 import android.annotation.SuppressLint
 import android.content.*
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.View
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -17,6 +20,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -42,6 +46,7 @@ class MainActivity : AppCompatActivity() {
     var jsc: JSController? = null
     private var THEME = "THEME"
     private var backgroundPlayHelper : BackgroundPlayHelper? = null
+    private var isFullScreen = false
     var togglePlay: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             jsc?.exec("togglePlay")
@@ -88,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                     finishAffinity()
                 }
             val alert = a_builder1.create()
-            alert.setTitle("YouTube")
+            alert.setTitle("WebTube")
             alert.show()
         } else {
             webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
@@ -151,47 +156,55 @@ class MainActivity : AppCompatActivity() {
             }
 
             //Main Code For Landscape Video
-            if (savedInstanceState == null) {
-                webView!!.post(Runnable { webView!!.loadUrl("https://m.youtube.com/?app=m") })
-            }
+
+                if (savedInstanceState == null) {
+                    openYT(intent.data.toString())
+                }
+
+
             webView!!.webChromeClient = object : WebChromeClient() {
-                @SuppressLint("StaticFieldLeak")
+                // implement fullscreen functionality to youtube video
                 private var mCustomView: View? = null
                 private var mCustomViewCallback: CustomViewCallback? = null
-
-                @SuppressLint("StaticFieldLeak")
                 protected var mFullscreenContainer: FrameLayout? = null
                 private var mOriginalOrientation = 0
                 private var mOriginalSystemUiVisibility = 0
 
-
+                @SuppressLint("WrongConstant")
                 override fun onHideCustomView() {
-                    (window.decorView as FrameLayout).removeView(mCustomView)
+                    (this@MainActivity.window.decorView as FrameLayout).removeView(mCustomView)
+                    isFullScreen = false
                     mCustomView = null
-                    window.decorView.systemUiVisibility = mOriginalSystemUiVisibility
-                    requestedOrientation = mOriginalOrientation
+
+                    this@MainActivity.window.decorView.systemUiVisibility =
+                        mOriginalSystemUiVisibility
+                    this@MainActivity.requestedOrientation = mOriginalOrientation
                     mCustomViewCallback!!.onCustomViewHidden()
                     mCustomViewCallback = null
                 }
 
                 override fun onShowCustomView(
-                    paramView: View,
-                    paramCustomViewCallback: CustomViewCallback,
+                    paramView: View?,
+                    paramCustomViewCallback: CustomViewCallback?
                 ) {
                     if (mCustomView != null) {
                         onHideCustomView()
                         return
                     }
+                    isFullScreen = true
                     mCustomView = paramView
-                    mOriginalSystemUiVisibility = window.decorView.systemUiVisibility
-                    mOriginalOrientation = requestedOrientation
+                    mOriginalSystemUiVisibility =
+                        this@MainActivity.window.decorView.systemUiVisibility
+                    mOriginalOrientation = this@MainActivity.requestedOrientation
                     mCustomViewCallback = paramCustomViewCallback
-                    (window.decorView as FrameLayout).addView(
+                    (this@MainActivity.window.decorView as FrameLayout).addView(
                         mCustomView,
                         FrameLayout.LayoutParams(-1, -1)
                     )
-                    window.decorView.systemUiVisibility = 3846 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    this@MainActivity.window.decorView.systemUiVisibility = 3846
                 }
+
+
 
                 override fun onProgressChanged(view: WebView, progress: Int) {
                     //                    getActivity().setProgress(progress * 100);
@@ -252,12 +265,73 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (isVideoView()) {
-            jsc!!.exec("toggleFull")
+
+    // on intent
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        val url = intent.data
+        openYT(url.toString())
+    }
+    private fun openYT(url : String) {
+        if (url.contains("youtube.com/watch?v=") || url.toString().contains("youtu.be/")) {
+            urlFinished = url.toString()
+
+            // transform url to mobile version
+
+            urlFinished = urlFinished.replace("youtu.be/", "youtube.com/watch?v=")
+            // check if url is mobile version
+            if (!urlFinished.contains("m.youtube.com")) {
+                // remove www. from url
+                urlFinished = urlFinished.replace("www.", "")
+                urlFinished = urlFinished.replace("youtube.com", "m.youtube.com")
+            }
+            //Toast.makeText(this, "URL : $urlFinished", Toast.LENGTH_SHORT).show()
+            webView!!.post(Runnable {
+                webView!!.loadUrl(urlFinished)
+            })
+        } else {
+
+                webView!!.post(Runnable { webView!!.loadUrl("https://m.youtube.com/?app=m") })
+
         }
     }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        if (isVideoView()) {
+            webView!!.postDelayed({
+                  jsc?.exec("toggleFull")
+            }, 200)
+
+        }
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // disable status bar
+            @Suppress("DEPRECATION")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.hide(WindowInsets.Type.statusBars())
+            } else {
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN
+                )
+            }
+
+            supportActionBar?.hide()
+        }else{
+            // enable status bar
+            @Suppress("DEPRECATION")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.show(WindowInsets.Type.statusBars())
+            } else {
+                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            }
+
+            supportActionBar?.show()
+        }
+    }
+
     override fun onResume() {
         initTheme()
         super.onResume()

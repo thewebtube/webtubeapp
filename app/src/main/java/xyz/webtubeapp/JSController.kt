@@ -105,80 +105,30 @@ class JSController(webView: WebView, context : Context) {
     """.trimIndent()
 
 
-    private val toggleFull = """
-   
-    document.querySelector(".fullscreen-icon").click()
 
-     """.trimIndent()
-
-
-    private val exitFullScreen = """
-        if(Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
-          try{
-          $toggleFull
-          catch(e){
-      
-          }
-        }
-    """.trimIndent()
-
-    private val enterFullScreen = """
-      if(!Array.from(document.querySelector("body").attributes,x => x.name).toString().includes("fullscreen")){
-            try{
-          $toggleFull
-          catch(e){
-        
-          }        
-       }
-    """.trimIndent()
-
-    private val play = """
-       document.getElementsByTagName('video')[0].play();
-    """.trimIndent()
-
-    private val pause = """
-       document.getElementsByTagName('video')[0].pause();
-    """.trimIndent()
-
-    private val popup = """
-        let tps = document.querySelector("#movie_player video").currentTime
-        WT.popup(document.URL+"&t="+tps)
-    """.trimIndent()
 
     fun exec(action: String) {
         var script = ""
-        if (action == "togglePlay") {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                webView.evaluateJavascript(
-                    "(function() { return document.getElementsByTagName('video')[0].paused; })();"
-                ) { value: String ->
-                    if (value == "true") {
-                        script = play
-                    } else {
-                        script = pause
-                    }
-                }
-            } else {
-                script = pause
-            }
-        } else if (action == "init") {
+
+        if (action == "init") {
             script = initScript
             Log.d("jsc", "init Script : " + initScript)
         } else if (action == "toggleFull") {
-            script = toggleFull
-        } else if (action == "exitFullScreen") {
-            script = exitFullScreen
-        } else if (action == "enterFullScreen") {
-            script = enterFullScreen
+            webView!!.loadUrl("javascript:document.querySelector(\"#player-control-overlay > div > div:nth-child(4) > div > button\").click()")
+            return
         } else if (action == "search") {
             script = search
-        }else if (action == "popup"){
-            script = popup
         }
-        try {
-            webView.evaluateJavascript(script) { _ -> Log.d("SCRIPT", "Injected") }
-        } catch (e: Error) {
-            Log.d("SCRIPT", "Inject Fail")
+        if (script != "") {
+
+            try {
+
+                webView.evaluateJavascript(script, null)
+
+
+            } catch (e: Error) {
+                Log.d("SCRIPT", "Inject Fail")
+            }
         }
     }
 

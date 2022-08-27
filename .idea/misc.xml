@@ -4,9 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.28958333333333336" />
+        <entry key="app/src/main/res/drawable/button_rounded.xml" value="0.138" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_plugins_view.xml" value="0.22" />
-        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_floating_widget.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/plugin_view.xml" value="0.19519927536231885" />
         <entry key="app/src/main/res/layout/plugins_list_item.xml" value="0.19519927536231885" />

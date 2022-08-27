@@ -11,12 +11,12 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="back">Back</string>
     <string name="check_update">Check Update</string>
-    <string name="darkmode">DarkMode</string>
+    <string name="darkmode">Dark Mode</string>
     <string name="todo">TODO</string>
     <string name="open_discord">Open Discord</string>
     <string name="check_internet">Check your internet connection and try again.</string>
     <string name="try_again">Try Again</string>
-    <string name="background_mode">Background mode</string>
+    <string name="background_mode">Background player (unstable)</string>
     <string name="cancel">cancel</string>
     <string name="ok">Ok</string>
     <string name="dialog_message_uninstall_old_package">An old version of the application has been discovered, do you want to delete it?</string>
@@ -29,6 +29,10 @@
     <string name="plugin_manager">Plugin manager</string>
 
     <string name="enabled">Enabled ?</string>
+    <string name="theme">Theme</string>
+    <string name="general">General</string>
+    <string name="webtube">WebTube</string>
+    <string name="other">Other</string>
 
 
 </resources>
