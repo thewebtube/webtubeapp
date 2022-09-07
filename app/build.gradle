@@ -10,8 +10,8 @@ android {
         applicationId "xyz.webtubeapp"
         minSdk 21
         targetSdk 32
-        versionCode 8
-        versionName "1.5.2"
+        versionCode 9
+        versionName "1.5.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
