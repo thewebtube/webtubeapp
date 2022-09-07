@@ -235,10 +235,10 @@ class MainActivity : AppCompatActivity() {
                     if (urlFinished != url) {
                         // do your stuff here
                         val host = Uri.parse(url).host.toString()
-                        if (host == "m.youtube.com") {
+                        if (host.contains("m.youtube.com")) {
                             jsc?.exec("init")
 
-                            //Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -271,6 +271,8 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         val url = intent.data
+        // stop old webview
+        webView!!.loadUrl("about:blank")
         openYT(url.toString())
     }
     private fun openYT(url : String) {
@@ -285,6 +287,9 @@ class MainActivity : AppCompatActivity() {
                 // remove www. from url
                 urlFinished = urlFinished.replace("www.", "")
                 urlFinished = urlFinished.replace("youtube.com", "m.youtube.com")
+
+                // add ?app=m to url
+                urlFinished = urlFinished + "?app=m"
             }
             //Toast.makeText(this, "URL : $urlFinished", Toast.LENGTH_SHORT).show()
             webView!!.post(Runnable {

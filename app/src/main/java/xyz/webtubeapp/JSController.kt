@@ -113,8 +113,10 @@ class JSController(webView: WebView, context : Context) {
         if (action == "init") {
             script = initScript
             Log.d("jsc", "init Script : " + initScript)
-        } else if (action == "toggleFull") {
-            webView!!.loadUrl("javascript:document.querySelector(\"#player-control-overlay > div > div:nth-child(4) > div > button\").click()")
+        } else if (action == "toggleFull") {0
+            val js = "try{document.querySelector(\"#player-control-overlay > div > div:nth-child(4) > div > button\").click()}catch(e){}"
+            webView!!.loadUrl("javascript:$js")
+
             return
         } else if (action == "search") {
             script = search
