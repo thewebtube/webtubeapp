@@ -47,7 +47,7 @@
 - SponsorBlock: Skip unwanted segments
 - RYD: Display youtube dislikes
 - Short Disabler: Disable short button
-- WebTueb anonymous statistics: Obtain statistics on the use of the application in an anonymous way
+- WebTube anonymous statistics: Obtain statistics on the use of the application in an anonymous way
 </details>
 
 # Upcoming
