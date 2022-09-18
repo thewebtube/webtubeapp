@@ -19,20 +19,20 @@
 
 # Features
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/adblock-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="src/adblock-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020899350542557246/adblock-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020898934194974770/adblock-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/plugin-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="/src/plugin-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900619789275218/plugin-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900785506230272/plugin-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/lightweight-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="src/lightweight-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900939693043852/lightweight-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900852728344607/lightweight-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
