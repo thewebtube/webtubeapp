@@ -1,11 +1,11 @@
 <p align="center">
   <a href="https://webtubeapp.xyz/">
-    <img src="./src/webtube_banner.svg" alt="Webtube icon" width="500"/>
-  </a>
+    <img src="./src/webtube_banner.svg" width="500"/>
+ WebTube is an application based on the YouTube website with many customizations and modifications.
+</a>
   </br>
-  WebTube is an application based on the YouTube website with many customizations and modifications to make the use of it more pleasant.
+  </p>
 
-  
 <details>
 <summary> Table of contents </summary>
 
@@ -19,20 +19,20 @@
 
 # Features
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/adblock-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="src/adblock-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="/src/adblock-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="src/adblock-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/plugin-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="/src/plugin-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="/src/plugin-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="/src/plugin-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="/src/lightweight-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="src/lightweight-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="/src/lightweight-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="src/lightweight-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
