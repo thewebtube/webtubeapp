@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="468"
+   width="350"
    height="60"
-   viewBox="0 0 123.825 15.875"
+   viewBox="0 0 92.604167 15.875"
    version="1.1"
    id="svg5"
    inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
-   sodipodi:docname="lightweight.svg"
+   sodipodi:docname="lightweight-light.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -26,7 +26,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="2.9006173"
-     inkscape:cx="220.81507"
+     inkscape:cx="219.43605"
      inkscape:cy="21.202383"
      inkscape:window-width="1920"
      inkscape:window-height="1001"
@@ -267,87 +267,68 @@
       <g
          id="g25847"
          style="fill:url(#linearGradient17899);fill-opacity:1">
-	<g
-   id="g25845"
-   style="fill:url(#linearGradient17897);fill-opacity:1">
-		<path
-   d="M 81.8,949.8 H 868 c 27.602,0 50,-22.4 50,-50 v -180 c 0,-27.6 -22.398,-50 -50,-50 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.599 22.4,50 50,50 z m 80.5,-179.901 c 22.1,0 40,17.9 40,40 0,22.101 -17.9,40 -40,40 -22.1,0 -40,-17.899 -40,-40 0,-22.099 17.9,-40 40,-40 z"
-   id="path25839"
-   style="fill:url(#linearGradient17891);fill-opacity:1" />
-
-		<path
-   d="M 81.8,614.899 H 868 c 27.602,0 50,-22.399 50,-50 v -180 c 0,-27.6 -22.398,-50 -50,-50 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.601 22.4,50 50,50 z M 162.3,435 c 22.1,0 40,17.899 40,40 0,22.1 -17.9,40 -40,40 -22.1,0 -40,-17.9 -40,-40 0,-22.101 17.9,-40 40,-40 z"
-   id="path25841"
-   style="fill:url(#linearGradient17893);fill-opacity:1" />
-
-		<path
-   d="M 81.8,280 H 868 c 27.602,0 50,-22.4 50,-50 V 50 C 918,22.4 895.602,0 868,0 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.6 22.4,50 50,50 z m 80.5,-179.9 c 22.1,0 40,17.9 40,40 0,22.1 -17.9,40 -40,40 -22.1,0 -40,-17.9 -40,-40 0,-22.1 17.9,-40 40,-40 z"
-   id="path25843"
-   style="fill:url(#linearGradient17895);fill-opacity:1" />
-
-	</g>
-
-</g>
+        <g
+           id="g25845"
+           style="fill:url(#linearGradient17897);fill-opacity:1">
+          <path
+             d="M 81.8,949.8 H 868 c 27.602,0 50,-22.4 50,-50 v -180 c 0,-27.6 -22.398,-50 -50,-50 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.599 22.4,50 50,50 z m 80.5,-179.901 c 22.1,0 40,17.9 40,40 0,22.101 -17.9,40 -40,40 -22.1,0 -40,-17.899 -40,-40 0,-22.099 17.9,-40 40,-40 z"
+             id="path25839"
+             style="fill:url(#linearGradient17891);fill-opacity:1" />
+          <path
+             d="M 81.8,614.899 H 868 c 27.602,0 50,-22.399 50,-50 v -180 c 0,-27.6 -22.398,-50 -50,-50 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.601 22.4,50 50,50 z M 162.3,435 c 22.1,0 40,17.899 40,40 0,22.1 -17.9,40 -40,40 -22.1,0 -40,-17.9 -40,-40 0,-22.101 17.9,-40 40,-40 z"
+             id="path25841"
+             style="fill:url(#linearGradient17893);fill-opacity:1" />
+          <path
+             d="M 81.8,280 H 868 c 27.602,0 50,-22.4 50,-50 V 50 C 918,22.4 895.602,0 868,0 H 81.8 c -27.6,0 -50,22.4 -50,50 v 180 c 0,27.6 22.4,50 50,50 z m 80.5,-179.9 c 22.1,0 40,17.9 40,40 0,22.1 -17.9,40 -40,40 -22.1,0 -40,-17.9 -40,-40 0,-22.1 17.9,-40 40,-40 z"
+             id="path25843"
+             style="fill:url(#linearGradient17895);fill-opacity:1" />
+        </g>
+      </g>
       <g
          id="g25849"
-         style="fill:url(#linearGradient17901);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17901);fill-opacity:1" />
       <g
          id="g25851"
-         style="fill:url(#linearGradient17903);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17903);fill-opacity:1" />
       <g
          id="g25853"
-         style="fill:url(#linearGradient17905);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17905);fill-opacity:1" />
       <g
          id="g25855"
-         style="fill:url(#linearGradient17907);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17907);fill-opacity:1" />
       <g
          id="g25857"
-         style="fill:url(#linearGradient17909);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17909);fill-opacity:1" />
       <g
          id="g25859"
-         style="fill:url(#linearGradient17911);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17911);fill-opacity:1" />
       <g
          id="g25861"
-         style="fill:url(#linearGradient17913);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17913);fill-opacity:1" />
       <g
          id="g25863"
-         style="fill:url(#linearGradient17915);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17915);fill-opacity:1" />
       <g
          id="g25865"
-         style="fill:url(#linearGradient17917);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17917);fill-opacity:1" />
       <g
          id="g25867"
-         style="fill:url(#linearGradient17919);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17919);fill-opacity:1" />
       <g
          id="g25869"
-         style="fill:url(#linearGradient17921);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17921);fill-opacity:1" />
       <g
          id="g25871"
-         style="fill:url(#linearGradient17923);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17923);fill-opacity:1" />
       <g
          id="g25873"
-         style="fill:url(#linearGradient17925);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17925);fill-opacity:1" />
       <g
          id="g25875"
-         style="fill:url(#linearGradient17927);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17927);fill-opacity:1" />
       <g
          id="g25877"
-         style="fill:url(#linearGradient17929);fill-opacity:1">
-</g>
+         style="fill:url(#linearGradient17929);fill-opacity:1" />
     </g>
   </g>
 </svg>
