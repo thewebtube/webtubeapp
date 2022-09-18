@@ -1,9 +1,11 @@
 <p align="center">
   <a href="https://webtubeapp.xyz/">
     <img src="./src/webtube_banner.svg" width="500"/>
- WebTube is an application based on the YouTube website with many customizations and modifications.
 </a>
   </br>
+  </p>
+  <p align="center"
+  <h4>WebTube is an application based on the YouTube website with many customizations and modifications.</h4>
   </p>
 
 <details>
