@@ -36,7 +36,7 @@ import com.github.javiersantos.appupdater.enums.UpdateFrom
 
 
 class MainActivity : AppCompatActivity() {
-    val ACTION_TOGGLE_PLAY = "togglePlay"
+    private val ACTION_TOGGLE_PLAY = "togglePlay"
 
 
     private var urlFinished: String = ""
@@ -73,7 +73,9 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(togglePlay,  IntentFilter(ACTION_TOGGLE_PLAY))
 
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        }
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
@@ -115,15 +117,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
-            if (Build.VERSION.SDK_INT >= 21) {
-                webSettings.mixedContentMode = 0
-                webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-            } else if (Build.VERSION.SDK_INT >= 19) {
-                webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-            } else {
-                webView!!.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-            }
+            webSettings.mixedContentMode = 0
+            webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
             webView!!.webViewClient = object : WebViewClient() {
+                @Deprecated("Deprecated in Java")
                 override fun onReceivedError(
                     webView: WebView,
                     errorCode: Int,
@@ -216,6 +213,7 @@ class MainActivity : AppCompatActivity() {
             }
             webView!!.webViewClient = object : WebViewClient() {
 
+                @Deprecated("Deprecated in Java")
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     val host = Uri.parse(url).host.toString()
                     Uri.parse(url).path.toString()
