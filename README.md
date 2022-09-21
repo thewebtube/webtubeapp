@@ -1,3 +1,4 @@
+[![Android CI](https://github.com/thewebtube/webtubeapp/actions/workflows/main.yml/badge.svg)](https://github.com/thewebtube/webtubeapp/actions/workflows/main.yml)
 <p align="center">
   <a href="https://webtubeapp.xyz/">
     <img src="./src/webtube_banner.svg" width="500"/>
