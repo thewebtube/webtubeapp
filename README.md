@@ -22,20 +22,20 @@
 
 # Features
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020899350542557246/adblock-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020898934194974770/adblock-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025285913586192434/adblock-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025287433270591508/adblock-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900619789275218/plugin-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900785506230272/plugin-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025287646156693554/plugin-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025287817250738198/plugin-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900939693043852/lightweight-dark.svg" width="350" height="60">
-  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1020352646630084608/1020900852728344607/lightweight-light.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: dark)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025288018019504128/lightweight-dark.svg" width="350" height="60">
+  <source media="(prefers-color-scheme: light)" srcset="https://cdn.discordapp.com/attachments/1025285792236572712/1025288211813118012/lightweight-light.svg" width="350" height="60">
   <img alt="">
 </picture>
 
