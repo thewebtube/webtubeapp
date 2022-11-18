@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
 
             //Main Code For Landscape Video
 
-                if (savedInstanceState == null) {
+                if (savedInstanceState == null || intent.data != null){
                     openYT(intent.data.toString())
                 }
 
@@ -235,7 +235,6 @@ class MainActivity : AppCompatActivity() {
                         if (host.contains("m.youtube.com")) {
                             jsc?.exec("init")
 
-                            Toast.makeText(this@MainActivity, "injected", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -268,9 +267,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
         val url = intent.data
-        // stop old webview
-        webView!!.loadUrl("about:blank")
-        openYT(url.toString())
+        if (url != null) {
+            openYT(url.toString())
+        }
     }
     private fun openYT(url : String) {
         if (url.contains("youtube.com/watch?v=") || url.toString().contains("youtu.be/")) {
@@ -286,15 +285,15 @@ class MainActivity : AppCompatActivity() {
                 urlFinished = urlFinished.replace("youtube.com", "m.youtube.com")
 
                 // add ?app=m to url
-                urlFinished = urlFinished + "?app=m"
+                urlFinished = "$urlFinished?app=m"
             }
             //Toast.makeText(this, "URL : $urlFinished", Toast.LENGTH_SHORT).show()
-            webView!!.post(Runnable {
+
                 webView!!.loadUrl(urlFinished)
-            })
+
         } else {
 
-                webView!!.post(Runnable { webView!!.loadUrl("https://m.youtube.com/?app=m") })
+           webView!!.loadUrl("https://m.youtube.com/?app=m")
 
         }
     }
